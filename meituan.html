@@ -1,0 +1,536 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一键生成美团好评</title>
+  <style>
+    :root {
+      --orange: #ff8a00;
+      --lemon: #ffd54f;
+      --bg: #fffaf0;
+      --card: #ffffff;
+      --text: #2d2a32;
+      --muted: #6b6873;
+      --shadow: 0 10px 30px rgba(255, 138, 0, 0.15);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 213, 79, 0.2), transparent 35%),
+                  radial-gradient(circle at 80% 10%, rgba(255, 138, 0, 0.16), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      padding: 18px 16px 26px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      margin: 4px 0 6px;
+      font-size: 22px;
+      letter-spacing: 0.6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .card {
+      background: linear-gradient(135deg, #fff, #fffaf4);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .radio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #ffe2a8;
+      background: #fffaf0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    .radio-pill input { accent-color: var(--orange); }
+    .radio-pill:hover {
+      border-color: var(--orange);
+      box-shadow: 0 6px 16px rgba(255, 138, 0, 0.12);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, var(--orange), #ffb300);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 12px 24px rgba(255, 138, 0, 0.25);
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:active { transform: translateY(1px); box-shadow: 0 6px 16px rgba(255, 138, 0, 0.18); }
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      background: #fff4d4;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 18px rgba(255, 138, 0, 0.18);
+    }
+    .btn-secondary:active { transform: translateY(1px); }
+    .section-title { margin: 16px 4px 10px; font-size: 15px; font-weight: 700; }
+    #candidateList { display: grid; gap: 10px; }
+    .candidate-card {
+      background: #fff;
+      border: 1px solid #ffe6b8;
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(255, 179, 0, 0.12);
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.2s ease, border 0.2s ease;
+    }
+    .candidate-card:hover {
+      transform: translateY(-1px);
+      border-color: var(--orange);
+      box-shadow: 0 10px 24px rgba(255, 138, 0, 0.18);
+    }
+    .candidate-card small { color: var(--muted); display: block; margin-top: 6px; font-size: 12px; }
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      border: 1px solid #ffdca3;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+      background: #fffdfa;
+      box-shadow: inset 0 2px 6px rgba(255, 179, 0, 0.08);
+    }
+    footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <h1>一键生成美团好评</h1>
+  <div class="subtitle">选择类别和风格，自动生成可编辑好评文案</div>
+
+  <div class="card">
+    <h2>1. 选择项目类别</h2>
+    <div class="radio-group" id="categorySelect">
+      <label class="radio-pill">
+        <input type="radio" name="category" value="头疗" checked> 头疗
+      </label>
+      <label class="radio-pill">
+        <input type="radio" name="category" value="洗脸"> 洗脸
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 选择文案风格</h2>
+    <div class="radio-group" id="toneSelect">
+      <label class="radio-pill"><input type="radio" name="tone" value="可爱"> 可爱</label>
+      <label class="radio-pill"><input type="radio" name="tone" value="激动"> 激动</label>
+      <label class="radio-pill"><input type="radio" name="tone" value="高冷"> 高冷</label>
+      <label class="radio-pill"><input type="radio" name="tone" value="朴实" checked> 朴实</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. 选择字数范围</h2>
+    <div class="radio-group" id="lengthSelect">
+      <label class="radio-pill"><input type="radio" name="length" value="50-80"> 50-80字</label>
+      <label class="radio-pill"><input type="radio" name="length" value="80-100" checked> 80-100字</label>
+      <label class="radio-pill"><input type="radio" name="length" value="100+"> 100字以上</label>
+    </div>
+  </div>
+
+  <button class="btn-primary" id="generateBtn">生成好评文案</button>
+
+  <div class="section-title">候选文案（点击一条进行编辑）</div>
+  <div id="candidateList"></div>
+
+  <div class="section-title">编辑最终文案</div>
+  <textarea id="finalReview" placeholder="点击上面的候选文案快速填充，或自行编辑~"></textarea>
+  <div style="margin-top: 10px;"><button class="btn-secondary" id="copyBtn">复制文案</button></div>
+
+  <footer>默认使用 SiliconFlow AI 生成，失败时会自动回退本地模板。</footer>
+
+  <script>
+    // AI 接口配置（使用 SiliconFlow），正式环境建议后端代理隐藏 Key
+    const AI_ENDPOINT = 'https://api.siliconflow.cn/v1/chat/completions';
+    const AI_MODEL = 'Qwen/QwQ-32B';
+    const AI_API_KEY = 'sk-pihenhweqybnktuipzwtofdjgbvgsthtysrjhmjbsbzegufx';
+
+    // 风格化词汇配置
+    const toneConfigs = {
+      '可爱': {
+        adverbs: ['超级', '真的', '简直', '太太太', '软乎乎', '甜甜'],
+        endings: ['～', '呀', '嘿嘿', '哈哈', '！', '！嘿嘿～'],
+        emojis: ['😆', '🥰', '✨', '💆‍♀️', '🌸', '🤭'],
+      },
+      '激动': {
+        adverbs: ['简直', '完全', '太', '真的', '不得不说', '爆赞'],
+        endings: ['！', '！！', '！强烈推荐！', '！太香了！'],
+        emojis: ['🔥', '💥', '🙌', '👏', '🤩'],
+      },
+      '高冷': {
+        adverbs: ['整体而言', '总体来说', '客观讲', '从体验看', '细节上'],
+        endings: ['。', '。值得一试。', '。体验稳定。', '。'],
+        emojis: [],
+      },
+      '朴实': {
+        adverbs: ['说实话', '老实讲', '整体还不错', '挺满意', '感觉挺踏实'],
+        endings: ['。', '，挺好的。', '，以后还会再来。', '。值得再来。'],
+        emojis: ['🙂', '👍', '🤗'],
+      },
+    };
+
+    // 风格化模板池
+    const toneTemplates = {
+      '可爱': {
+        openings: [
+          '今天来体验一下，小小一间店，幸福感拉满',
+          '和朋友约着过来，气氛温温柔柔的好放松',
+          '忙了一天冲过来，想要被治愈一下，果然没失望',
+          '打卡一下这家宝藏店，店里香香的超安心',
+          '随手预约，没想到这么贴心，心情瞬间变亮',
+          '想偷懒躺平，结果被这家治愈到冒泡',
+        ],
+        headSpa: [
+          '头疗全程轻轻柔柔，酥到差点睡着',
+          '头部按摩节奏刚好，头顶像被云朵抱着',
+          '精油味道淡淡的，按完感觉脑袋都变轻盈',
+          '太阳穴按压到位，整个人软绵绵超舒服',
+          '肩颈也带着放松，整条脖子都松开了',
+          '敷热巾那一刻，整个人都融化了',
+        ],
+        facial: [
+          '洗脸手法细致，像被羽毛轻刷的感觉',
+          '清洁一步步做，很温柔，脸上没有拉扯感',
+          '敷面膜冰冰凉凉，超级解压，皮肤喝饱水',
+          '黑头清理得干净又不疼，鼻子摸起来溜滑',
+          '按摩到下颌线，整张脸都被轻柔托住',
+          '水乳香香的，做完脸亮亮的，开心',
+        ],
+        environment: [
+          '店里放着轻音乐，灯光暖暖的，想躺一整天',
+          '床铺软软的，盖的毯子也香香的，安全感满满',
+          '房间干净整洁，细节都打理得很好',
+          '技师说话很轻，整场都很温柔，完全不会打扰',
+          '小摆件都很可爱，看着就心情好',
+        ],
+        service: [
+          '小姐姐很耐心，动作轻柔，全程提醒体验感受',
+          '提前准备好热毛巾和水杯，体贴值拉满',
+          '讲解很细，哪里不舒服都会帮忙调整',
+          '服务过程会确认力度，温柔又周到',
+          '结束还会贴心提醒护理小建议，感觉被照顾到了',
+        ],
+        closing: [
+          '做完真的轻飘飘，强烈安利给想放松的朋友们',
+          '幸福感叮地满格，下次还要和姐妹再约',
+          '感觉状态被充电，推荐大家来试试呀',
+          '小确幸+1，真的值得收藏，嘿嘿',
+          '舒舒服服躺着变美，根本停不下来',
+        ],
+      },
+      '激动': {
+        openings: [
+          '太惊喜了！随机挑的店居然这么顶',
+          '完全超出预期，简直宝藏！',
+          '不得不说，今天的体验爆赞！',
+          '第一感觉就是专业又松弛，瞬间放心',
+          '这速度和手法，真是稳准快，太爽了！',
+          '冲着口碑来的，结果更好，开心到飞起',
+        ],
+        headSpa: [
+          '头疗节奏又稳又带劲，按到位直呼过瘾',
+          '太阳穴按下去那一刻，舒爽直击天灵盖',
+          '精油味道清爽，瞬间唤醒整个人',
+          '肩颈放松得很彻底，整条背都松开了',
+          '热敷叠加按摩，放松到忍不住想再加时',
+          '力度随叫随到，太懂了，舒服得想鼓掌',
+        ],
+        facial: [
+          '洗完脸立马感觉皮肤在发光，水润到不行',
+          '黑头清理干净又不疼，毛孔像被打开通道',
+          '敷面膜冰凉透心，整张脸醒过来了',
+          '按摩到下颌线，紧致感直接上来，惊喜！',
+          '水乳收尾很服帖，脸上亮亮的，想自拍！',
+          '去角质和清洁的衔接很顺畅，完全不刺激',
+        ],
+        environment: [
+          '环境干净明亮，躺上去立刻放松',
+          '房间有淡淡香气，背景音乐太加分了',
+          '床铺很软，盖毯暖乎乎，躺平秒入状态',
+          '工具消杀到位，看得见的安心感',
+          '整体动线流畅，体验全程无卡顿',
+        ],
+        service: [
+          '技师超细心，会实时问力度，超贴心',
+          '讲解步骤很专业，让人安心闭眼享受',
+          '提前准备好水和热巾，服务节奏绝了',
+          '每一步都说得明白，舒适度拉满',
+          '结束还给了护理建议，实用又到位',
+        ],
+        closing: [
+          '做完神清气爽，强烈推荐给想放松的你！',
+          '体验太香了！下次还要冲！',
+          '完全值回票价，忍不住想安利朋友',
+          '舒服到差点睡着，醒来满血复活！',
+          '超级加分的一次体验，绝对值得来！',
+        ],
+      },
+      '高冷': {
+        openings: [
+          '整体感觉顺顺当当，进店不用等太久',
+          '到店就能开始，流程清爽不拖沓',
+          '沟通直接，需求讲清楚就上手',
+          '环境干净安静，没有多余味道',
+          '灯光柔和，躺下就能放松下来',
+          '安排得很稳，节奏不赶不拖',
+        ],
+        headSpa: [
+          '头疗力度稳，不飘，按着挺放松',
+          '太阳穴点按到位，缓解了一天的紧绷',
+          '精油味道淡淡的，不冲，能接受',
+          '肩颈也带按，僵硬的地方松了些',
+          '热敷时间够，用完头皮很松',
+          '手法连贯，没有突然停顿的感觉',
+        ],
+        facial: [
+          '洗脸动作轻，基本不拉扯皮肤',
+          '黑头清理控制得住力度，疼感不明显',
+          '面膜敷得服帖，补水能感觉到',
+          '下颌线也有按压，脸部放松一些',
+          '收尾水乳清爽，不油腻',
+          '步骤衔接顺畅，体验完整',
+        ],
+        environment: [
+          '房间安静，背景音乐音量合适',
+          '床品干净，盖起来舒适',
+          '光线柔和，不刺眼，适合闭眼休息',
+          '工具摆放整齐，看起来卫生到位',
+          '整体整理得干净利落',
+        ],
+        service: [
+          '技师讲话简洁，先确认力度再开始',
+          '过程会问感受，不合适就帮调整',
+          '没有额外推销，体验比较轻松',
+          '结束会说些护理建议，实用为主',
+          '尊重个人空间，不会频繁打扰',
+        ],
+        closing: [
+          '做完身体放松，效果达到了。',
+          '整体体验稳定，适合想安静护理的人。',
+          '性价比还行，后面可以考虑再来。',
+          '节奏稳，放松感有，符合预期。',
+          '简单直接的体验，想放松可以试试。',
+        ],
+      },
+      '朴实': {
+        openings: [
+          '说实话，店不大但挺干净的',
+          '老实讲，前台安排得挺顺',
+          '整体还不错，预约到了就直接做',
+          '感觉挺踏实，环境简单但舒服',
+          '接待很直接，沟通清楚明白',
+          '体验一开始就挺顺，没有等太久',
+        ],
+        headSpa: [
+          '头疗按得挺细，力度能随时调',
+          '太阳穴按压到位，缓解了不少疲劳',
+          '肩颈带按，舒服很多，僵硬放松了',
+          '热敷暖暖的，头皮放松得挺明显',
+          '手法稳，节奏不快不慢，能放空',
+          '按完觉得头轻一点，人也精神了',
+        ],
+        facial: [
+          '洗得挺干净的，脸上不拉扯',
+          '黑头清理得还行，不怎么疼',
+          '面膜敷得服帖，补水感觉到位',
+          '下颌线也有按摩，脸放松不少',
+          '水乳收尾清爽，不黏腻，挺舒服',
+          '清洁和按摩衔接自然，没有突兀感',
+        ],
+        environment: [
+          '店里安静，灯光不刺眼',
+          '床铺干净，毯子暖暖的',
+          '背景音乐轻一点，躺着能休息',
+          '工具整齐，能看出消毒做得不错',
+          '房间保持得挺整洁，细节到位',
+        ],
+        service: [
+          '技师态度温和，讲话不多但到点',
+          '会先问力度再开始，挺贴心',
+          '操作时会提醒步骤，心里有底',
+          '结束后简单说了注意事项，实用',
+          '没有强推项目，体验轻松',
+        ],
+        closing: [
+          '做完感觉轻松不少，下次还会来。',
+          '整体挺满意，放松效果有感。',
+          '价格和体验对得上，值得再来。',
+          '舒服了一场，回去睡得更香了。',
+          '真实好评，推荐给想放松的人。',
+        ],
+      },
+    };
+
+    function getSelectedValue(name) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    function generateReview(category, tone, lengthOption) {
+      const cfg = toneConfigs[tone];
+      const pool = toneTemplates[tone];
+      const sentenceTarget = { '50-80': [3,4], '80-100': [4,5], '100+': [5,6] }[lengthOption] || [4,5];
+      const targetCount = Math.floor(Math.random() * (sentenceTarget[1] - sentenceTarget[0] + 1)) + sentenceTarget[0];
+      const sentences = [];
+      sentences.push(pick(pool.openings));
+      const catKey = category === '头疗' ? 'headSpa' : 'facial';
+      sentences.push(pick(pool[catKey]));
+      sentences.push(pick(pool.environment));
+      sentences.push(pick(pool.service));
+      while (sentences.length < targetCount - 1) {
+        const sources = [pool[catKey], pool.environment, pool.service];
+        sentences.push(pick(pick(sources)));
+      }
+      sentences.push(pick(pool.closing));
+      const ending = pick(cfg.endings);
+      const emoji = cfg.emojis.length ? ' ' + pick(cfg.emojis) : '';
+      const connectors = ['，','，','。','；'];
+      let paragraph = sentences
+        .map((s, idx) => idx === sentences.length - 1 ? s : s.replace(/[。！!；;，,、~～]+$/, ''))
+        .join(pick(connectors));
+      paragraph = pick(cfg.adverbs) + paragraph + ending + emoji;
+      return paragraph;
+    }
+
+    async function generateWithAI(category, tone, lengthOption) {
+      const lengthHint = { '50-80': '控制在50-80字', '80-100': '控制在80-100字', '100+': '不少于100字，可以120字以内' }[lengthOption] || '控制在80-100字';
+      const prompt = `你是美团好评写手，根据用户选择生成3条不同的好评，类别=${category}，风格=${tone}。用词要体现风格，避免重复句式，${lengthHint}，输出时用三段文字，用|||分隔，不要编号，语气口语化。`;
+      const body = {
+        model: AI_MODEL,
+        messages: [
+          { role: 'system', content: '你是一名中文文案写手，专注美团好评，语气口语化，遵循用户指定风格。' },
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.9,
+        max_tokens: 420,
+        presence_penalty: 0.2,
+      };
+      const resp = await fetch(AI_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AI_API_KEY}`,
+        },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(text || 'AI 接口错误');
+      }
+      const data = await resp.json();
+      const content = data.choices?.[0]?.message?.content || '';
+      // 兼容没有 ||| 分隔的返回，尝试按换行拆分
+      let reviews = content.split('|||').map(s => s.trim()).filter(Boolean);
+      if (reviews.length <= 1) {
+        reviews = content.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      }
+      reviews = reviews.slice(0, 3);
+      if (!reviews.length) throw new Error('AI 返回为空');
+      return reviews;
+    }
+
+    function renderCandidates(reviews) {
+      const list = document.getElementById('candidateList');
+      list.innerHTML = '';
+      reviews.forEach((text, idx) => {
+        const card = document.createElement('div');
+        card.className = 'candidate-card';
+        card.setAttribute('data-text', text);
+        card.innerHTML = `<div>${text}</div><small>点击填入编辑区 · 候选 ${idx + 1}</small>`;
+        list.appendChild(card);
+      });
+    }
+
+    async function handleGenerate() {
+      const category = getSelectedValue('category');
+      const tone = getSelectedValue('tone');
+      const lengthOption = getSelectedValue('length');
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      btn.textContent = 'AI生成中…';
+      try {
+        const aiReviews = await generateWithAI(category, tone, lengthOption);
+        renderCandidates(aiReviews);
+      } catch (err) {
+        console.error(err);
+        const fallbackReviews = Array.from({ length: 3 }, () => generateReview(category, tone, lengthOption));
+        renderCandidates(fallbackReviews);
+        alert('AI生成失败，已使用本地模板生成');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '生成好评文案';
+      }
+    }
+
+    function handleCandidateClick(e) {
+      const card = e.target.closest('.candidate-card');
+      if (!card) return;
+      document.getElementById('finalReview').value = card.getAttribute('data-text');
+    }
+
+    async function handleCopy() {
+      const text = document.getElementById('finalReview').value.trim();
+      if (!text) { alert('请先选择或编辑文案再复制'); return; }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+        alert('已复制，可去美团粘贴~');
+      } catch (err) {
+        alert('复制失败，请手动长按全选复制');
+      }
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', handleGenerate);
+    document.getElementById('candidateList').addEventListener('click', handleCandidateClick);
+    document.getElementById('copyBtn').addEventListener('click', handleCopy);
+  </script>
+</body>
+</html>
