@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>轻松熊·捏头熊——好评种草发布中心 · 一级入口</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Noto+Sans+SC:wght@500;600&display=swap');
+    :root {
+      --bg: radial-gradient(circle at 20% 20%, rgba(255, 170, 43, 0.25), transparent 36%),
+             radial-gradient(circle at 82% 16%, rgba(255, 95, 162, 0.24), transparent 30%),
+             #fef7ee;
+      --text: #1e1a2b;
+      --muted: #5b5566;
+      --card: #ffffff;
+      --orange: #ff8a00;
+      --radius: 18px;
+      --shadow: 0 24px 60px rgba(30, 26, 43, 0.16);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    h1 { margin: 0; font-size: 24px; letter-spacing: 0.2px; }
+    .pill { padding: 10px 14px; border-radius: 999px; background: rgba(30, 26, 43, 0.05); font-weight: 600; font-size: 13px; color: var(--text); border: 1px solid rgba(30, 26, 43, 0.08); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .card {
+      background: linear-gradient(140deg, #fff, #fff9f1);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.25s ease;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid #f3e2c8;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 28px 70px rgba(30, 26, 43, 0.2); }
+    .card h2 { margin: 8px 0 0; font-size: 20px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 12px; background: #fff3e0; color: #c95b00; border: 1px solid rgba(255, 138, 0, 0.2); }
+    .qr { width: 200px; height: 200px; border-radius: 16px; background: #fff; border: 1px solid #f0e4d4; display: grid; place-items: center; margin-top: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+    .qr img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+    .logo-xhs, .logo-dy, .logo-other { width: 200px; height: 200px; border-radius: 24px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 22px; letter-spacing: 1px; box-shadow: 0 20px 36px rgba(0,0,0,0.18); }
+    .logo-xhs { background: linear-gradient(145deg, #ff4f52, #ff7477); box-shadow: 0 20px 36px rgba(255, 79, 82, 0.28); }
+    .logo-dy { background: #111622; color: #00f2ea; position: relative; }
+    .logo-dy::after { content: ''; position: absolute; width: 70%; height: 70%; border-radius: 18px; background: rgba(255, 45, 85, 0.2); transform: translate(16px, 10px); z-index: 0; }
+    .logo-dy span { position: relative; z-index: 1; }
+    .logo-other { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+    footer { margin-top: 24px; color: var(--muted); font-size: 12px; text-align: center; }
+    @media (max-width: 820px) { body { padding: 18px; } .grid { grid-template-columns: 1fr; } .card { min-height: 240px; } .qr, .logo-xhs, .logo-dy, .logo-other { width: 180px; height: 180px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>轻松熊·捏头熊——好评+种草 发布中心</h1>
+    </div>
+
+  </header>
+
+  <section class="grid">
+    <a class="card" href="#" onclick="event.preventDefault(); alert('\u8bf7\u7528\u624b\u673a\u626b\u7801');">
+      <div class="badge">美团好评</div>
+      <div class="qr">
+        <img src="assets/meituan-qr.png" alt="Meituan QR">
+      </div>
+      <h2>一键美团好评</h2>
+    </a>
+
+    <a class="card" href="xhs.html">
+      <div class="badge" style="background:#ffe7e8;color:#c92c32;border-color:#ffcfd1;">小红书</div>
+      <div class="logo-xhs">小红书</div>
+      <h2>小红书种草笔记</h2>
+    </a>
+
+    <a class="card" href="douyin.html">
+      <div class="badge" style="background:#e9ebff;color:#2d327a;border-color:rgba(45,50,122,0.2);">抖音</div>
+      <div class="logo-dy"><span>DY</span></div>
+      <h2>抖音种草笔记</h2>
+    </a>
+
+    <a class="card" href="other.html">
+      <div class="badge" style="background:#f0e9ff;color:#5a31c4;border-color:rgba(90,49,196,0.2);">其他</div>
+      <div class="logo-other">∞</div>
+      <h2>更多玩法</h2>
+    </a>
+  </section>
+
+  <footer></footer>
+</body>
+</html>
