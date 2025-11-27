@@ -15,13 +15,7 @@ function setCors(req, res) {
 }
 
 function buildPrompt(scene, tags) {
-  return `You are a Xiaohongshu (RED) copywriter. Write one lifestyle note in Chinese.
-- Scene: ${scene}; keep the copy centered on this scenario, casual and friendly, not salesy.
-- Structure: an eye-catching title (<= 20 chars), newline, then the body; total <= 500 chars.
-- Body: add experience details (environment/service/effects), naturally blend 2-5 emojis.
-- No numbering, no words like "below" or ad speak.
-- End with the exact tag string on a new line: ${tags}.
-Output strictly JSON: {"title":"...","body":"..."}, no extra text or Markdown.`;
+  return `??????????????1??????????????\n- ???${scene}??????????????????????????????????\n- ?????????????20??????????????500??\n- ?????????????/????????2-5??????emoji?\n- ??????????????????????\n- ??????????????${tags}\n?????JSON???{"title":"...","body":"..."}??????????`;
 }
 
 function normalizeTags(tags) {
@@ -35,7 +29,7 @@ function normalizeTags(tags) {
 }
 
 function stripLabel(text = "") {
-  return text.replace(/^(title)?\s*[:\-]?\s*/i, "").trim();
+  return text.replace(/^(??|title)?\s*[:?-]?\s*/i, "").trim();
 }
 
 function parseAiNote(content) {
@@ -46,12 +40,10 @@ function parseAiNote(content) {
   } catch (err) {
     // ignore
   }
-  const lines = content.split(/
-+/).map((l) => l.trim()).filter(Boolean);
+  const lines = content.split(/\n+/).map((l) => l.trim()).filter(Boolean);
   if (!lines.length) return {};
   const title = stripLabel(lines[0]);
-  const body = lines.slice(1).join("
-").trim();
+  const body = lines.slice(1).join("\n").trim();
   return { title, body: body || content };
 }
 
@@ -76,9 +68,7 @@ function assembleNote({ title, body, tagsLine, maxLength = 500 }) {
     title: titleLine,
     body: trimmedBody,
     tagsLine: normalizedTags,
-    content: parts.join("
-
-").trim(),
+    content: parts.join("\n\n").trim(),
   };
 }
 
