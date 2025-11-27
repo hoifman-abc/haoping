@@ -135,11 +135,8 @@
   </div>
 
     <script>
-    const API_BASE =
-      location.origin && location.origin.startsWith('http')
-        ? location.origin
-        : 'http://localhost:3000';
-    const API_ROUTE = `${API_BASE}/api/generate`;
+    const API_BASE = '';
+    const API_ROUTE = '/api/generate';
 
     const noteText = document.getElementById('noteText');
     const tagsInput = document.getElementById('tags');
